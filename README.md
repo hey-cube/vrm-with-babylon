@@ -1,1 +1,1 @@
-# vrm-with-babylon
+# vrm-with-threejs-sample
