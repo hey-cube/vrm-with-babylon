@@ -13,5 +13,7 @@ module.exports = {
   parserOptions: {
     sourceType: 'module',
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/no-non-null-assertion': 0,
+  },
 };

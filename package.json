@@ -22,9 +22,9 @@
   "scripts": {
     "build": "webpack",
     "build:watch": "webpack --watch",
-    "start:dev": "webpack-dev-server",
-    "lint": "eslint src",
-    "format": "prettier-eslint --write 'src/**/*.ts'"
+    "start": "webpack-dev-server",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write 'src/**/*.ts'"
   },
   "husky": {
     "hooks": {
