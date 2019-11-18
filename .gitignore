@@ -2,3 +2,4 @@ node_modules/
 *.log
 dist/main.js
 dist/models/
+src/WebVR.js

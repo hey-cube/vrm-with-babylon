@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { WebVR } from './WebVR';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { VRM, VRMSchema } from '@pixiv/three-vrm';
 
@@ -10,9 +11,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
+  renderer.vr.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0x000000);
   document.body.appendChild(renderer.domElement);
+
+  // https://github.com/mrdoob/three.js/blob/e319f670f4e0230ffe277e790b2840110568cafa/examples/js/vr/WebVR.js
+  document.body.appendChild(WebVR.createButton(renderer));
 
   const light = new THREE.DirectionalLight(0xffffff);
   light.position.set(1, 1, 1).normalize();
@@ -23,6 +28,8 @@ window.addEventListener('DOMContentLoaded', () => {
     VRM.from(gltf).then(vrm => {
       scene.add(vrm.scene);
       vrm.scene.rotation.y = Math.PI;
+      vrm.scene.position.y -= 0.2;
+      vrm.scene.position.z -= 1;
 
       if (vrm.humanoid === undefined) {
         return;
@@ -43,8 +50,8 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   const update = (): void => {
-    requestAnimationFrame(update);
     renderer.render(scene, camera);
+    requestAnimationFrame(update);
   };
   update();
 });
