@@ -4,5 +4,12 @@
     "editor.formatOnSave": false
   },
   "eslint.autoFixOnSave": true,
-  "eslint.validate": ["javascript", { "language": "typescript", "autoFix": true }]
+  "eslint.validate": [
+    "javascript",
+    {
+      "language": "typescript",
+      "autoFix": true
+    }
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
