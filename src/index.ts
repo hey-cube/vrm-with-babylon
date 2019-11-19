@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { WebVR } from './WebVR';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { VRM, VRMSchema } from '@pixiv/three-vrm';
+import { Euler } from 'three';
 
 window.addEventListener('DOMContentLoaded', () => {
   // scene
@@ -27,23 +28,6 @@ window.addEventListener('DOMContentLoaded', () => {
   light.position.set(1, 1, 1).normalize();
   scene.add(light);
 
-  // animation
-  let currentMixer: THREE.AnimationMixer;
-  function prepareAnimation(vrm: VRM): void {
-    currentMixer = new THREE.AnimationMixer(vrm.scene);
-    const quatA = new THREE.Quaternion(0.0, 0.0, 0.0, 1.0);
-    const quatB = new THREE.Quaternion(0.0, 0.0, 0.0, 1.0);
-    quatB.setFromEuler(new THREE.Euler(0.0, 0.0, 0.25 * Math.PI));
-    const armTrack = new THREE.QuaternionKeyframeTrack(
-      vrm.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.LeftUpperArm)?.name + '.quaternion', // name
-      [0.0, 0.5, 1.0], // times
-      [...quatA.toArray(), ...quatB.toArray(), ...quatA.toArray()], // values
-    );
-    const clip = new THREE.AnimationClip('blink', 1.0, [armTrack]);
-    const action = currentMixer.clipAction(clip);
-    action.play();
-  }
-
   // loader
   let currentVrm: VRM;
   const loader = new GLTFLoader();
@@ -54,7 +38,6 @@ window.addEventListener('DOMContentLoaded', () => {
       vrm.scene.rotation.y = Math.PI;
       vrm.scene.position.y -= 0.2;
       vrm.scene.position.z -= 1;
-      prepareAnimation(vrm);
     });
   });
 
@@ -69,11 +52,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const update = (): void => {
     requestAnimationFrame(update);
     const deltaTime = clock.getDelta();
-    if (currentVrm) {
+    const orientation = renderer.vr.getDevice()?.getPose().orientation;
+    if (currentVrm && orientation) {
+      const neck = currentVrm.humanoid?.getBoneNode(VRMSchema.HumanoidBoneName.Neck);
+      neck?.setRotationFromEuler(
+        new Euler(orientation[0] * 2, orientation[1] * -2, orientation[2] * -2),
+      );
       currentVrm.update(deltaTime);
-    }
-    if (currentMixer) {
-      currentMixer.update(deltaTime);
     }
     renderer.render(scene, camera);
   };
