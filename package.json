@@ -2,7 +2,7 @@
   "dependencies": {
     "@pixiv/three-vrm": "^0.2.0",
     "@types/three": "^0.103.2",
-    "three": "^0.110.0",
+    "three": "^0.137.0",
     "typescript": "^3.7.2"
   },
   "devDependencies": {
